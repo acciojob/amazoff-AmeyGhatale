@@ -64,7 +64,8 @@ public class OrderRepository {
     public Integer findOrderCountByPartnerId(String partnerId){
         // your code here
         DeliveryPartner deliveryPartner = partnerMap.get(partnerId);
-        return deliveryPartner.getNumberOfOrders();
+        Integer count =  deliveryPartner.getNumberOfOrders();
+        return count;
     }
 
     public List<String> findOrdersByPartnerId(String partnerId){
@@ -166,7 +167,11 @@ public class OrderRepository {
         int mm=(int)min;
         String deliveryTime = "";
 
-        if(hour<10)
+        if(hour<10 && min<10)
+            deliveryTime = "0"+hour+":0"+mm;
+        else if(min<10)
+            deliveryTime = hour+":0"+mm;
+        else if(hour<10)
             deliveryTime = "0"+hour+":"+mm;
         else
             deliveryTime = hour+":"+mm;
