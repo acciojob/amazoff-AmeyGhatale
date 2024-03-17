@@ -133,6 +133,9 @@ public class OrderRepository {
     public void deletePartner(String partnerId){
         // your code here
         // delete partner by ID
+        if (!partnerMap.containsKey(partnerId))
+            return;
+
         partnerMap.remove(partnerId);
         partnerToOrderMap.remove(partnerId);
 
