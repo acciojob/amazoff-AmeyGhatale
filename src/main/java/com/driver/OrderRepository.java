@@ -142,7 +142,6 @@ public class OrderRepository {
         for(String order : orderToPartnerMap.keySet()){
             if(orderToPartnerMap.get(order).equals(partnerId)){
                 orderToPartnerMap.remove(order);
-                break;
             }
         }
     }
