@@ -33,8 +33,8 @@ public class OrderController {
         return new ResponseEntity<>("New delivery partner added successfully", HttpStatus.CREATED);
     }
 
-    @PutMapping("/add-order-partner-pair")  //NOT
-    public ResponseEntity<String> addOrderPartnerPair(@RequestParam("id") String orderId, @RequestParam ("id") String partnerId){
+    @PutMapping("/add-order-partner-pair")  // WORKING
+    public ResponseEntity<String> addOrderPartnerPair(@RequestParam String orderId, @RequestParam  String partnerId){
         orderService.createOrderPartnerPair(orderId, partnerId);
         //This is basically assigning that order to that partnerId
         return new ResponseEntity<>("New order-partner pair added successfully", HttpStatus.CREATED);
@@ -59,17 +59,17 @@ public class OrderController {
         return new ResponseEntity<>(deliveryPartner, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-order-count-by-partner-id/{partnerId}")   //WORKING
+    @GetMapping("/get-order-count-by-partner-id/{partnerId}")   //NOT WORKING
     public ResponseEntity<Integer> getOrderCountByPartnerId(@PathVariable String partnerId){
 
-        Integer orderCount = orderService.getOrderCountByPartnerId(partnerId);
+        Integer orderCount = orderService.getPartnerById(partnerId).getNumberOfOrders();
 
         //orderCount should denote the orders given by a partner-id
 
         return new ResponseEntity<>(orderCount, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-orders-by-partner-id/{partnerId}")    //WORKING (DOUBT)
+    @GetMapping("/get-orders-by-partner-id/{partnerId}")    //WORKING
     public ResponseEntity<List<String>> getOrdersByPartnerId(@PathVariable String partnerId){
         List<String> orders = orderService.getOrdersByPartnerId(partnerId);
 
@@ -86,7 +86,7 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-count-of-unassigned-orders")  //WORKING
+    @GetMapping("/get-count-of-unassigned-orders")  //NOT WORKING
     public ResponseEntity<Integer> getCountOfUnassignedOrders(){
         Integer countOfOrders = orderService.getCountOfUnassignedOrders();
 
@@ -95,7 +95,7 @@ public class OrderController {
         return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}")   //NOT WORKING (PATH VARIABLE ERROR)
+        @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}")   //NOT WORKING (PATH VARIABLE ERROR)
     public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable String time, @PathVariable String partnerId){
 
         Integer countOfOrders = orderService.getOrdersLeftAfterGivenTimeByPartnerId(time, partnerId);

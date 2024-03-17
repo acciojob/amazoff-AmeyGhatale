@@ -1,6 +1,7 @@
 package com.driver;
 
 import java.util.*;
+import java.util.concurrent.Phaser;
 
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +28,13 @@ public class OrderRepository {
 //        partnerMap.put("1", new DeliveryPartner("1"));
 //        partnerMap.put("2", new DeliveryPartner("2"));
 //        partnerMap.put("3", new DeliveryPartner("3"));
+//
+//        HashSet<String> hs = new HashSet<>();
+//        hs.add("2"); hs.add("3"); hs.add("4"); hs.add("5");
+//        partnerToOrderMap.put("3", hs);
+//        HashSet<String> hss = new HashSet<>();
+//        hss.add("1");
+//        partnerToOrderMap.put("1", hss);
 
     }
 
@@ -69,10 +77,13 @@ public class OrderRepository {
             //assign partner to this order
             orderToPartnerMap.put(orderId, partnerId);
 
-            HashSet<String> hs = partnerToOrderMap.get(partnerId);
-            HashSet<String> newHs = new HashSet<>(hs);
-            newHs.add(orderId);
-            partnerToOrderMap.put(partnerId, newHs);
+            if(!partnerToOrderMap.containsKey(partnerId)){
+                HashSet<String> hs = new HashSet<>();
+                hs.add(orderId);
+                partnerToOrderMap.put(partnerId, hs);
+            }
+            else
+                partnerToOrderMap.get(partnerId).add(orderId);
 
 
 //            System.out.println("OPm Inside  order present="+orderMap.containsKey(orderId)+"  partner present="+partnerMap.containsKey(partnerId));
@@ -97,15 +108,19 @@ public class OrderRepository {
 
     public Integer findOrderCountByPartnerId(String partnerId){
         // your code here
+        Integer count = 0;
         DeliveryPartner deliveryPartner = partnerMap.get(partnerId);
-        Integer count =  deliveryPartner.getNumberOfOrders();
+         count =  deliveryPartner.getNumberOfOrders();
         return count;
     }
 
     public List<String> findOrdersByPartnerId(String partnerId){
         // your code here
+
+//        System.out.println("Id  present="+partnerToOrderMap.containsKey(partnerId));
         if(partnerToOrderMap.containsKey(partnerId))
             return new ArrayList<>(partnerToOrderMap.get(partnerId));
+//        System.out.println("Id not present");
         return null;
     }
 
@@ -188,31 +203,34 @@ public class OrderRepository {
     public String findLastDeliveryTimeByPartnerId(String partnerId){
         // your code here
         // code should return string in format HH:MM
-        float max = 0;
-        HashSet<String> hs = partnerToOrderMap.get(partnerId);
-        for(String orders : hs){
-            Order order = findOrderById(orders);
-            int time = order.getDeliveryTime();
+        if (partnerToOrderMap.containsKey(partnerId)) {
+            float max = 0;
+            HashSet<String> hs = partnerToOrderMap.get(partnerId);
+            for (String orders : hs) {
+                Order order = findOrderById(orders);
+                int time = order.getDeliveryTime();
 
-            if(max<time)
-                max = time;
+                if (max < time)
+                    max = time;
+            }
+
+            int hour = (int) max / 60;
+            float min = ((max / 60) - hour) * 60;
+            int mm = (int) min;
+            String deliveryTime = "";
+
+            if (hour < 10 && min < 10)
+                deliveryTime = "0" + hour + ":0" + mm;
+            else if (min < 10)
+                deliveryTime = hour + ":0" + mm;
+            else if (hour < 10)
+                deliveryTime = "0" + hour + ":" + mm;
+            else
+                deliveryTime = hour + ":" + mm;
+
+            return deliveryTime;
         }
-
-        int hour = (int)max/60;
-        float min = ((max/60)- hour)*60;
-        int mm=(int)min;
-        String deliveryTime = "";
-
-        if(hour<10 && min<10)
-            deliveryTime = "0"+hour+":0"+mm;
-        else if(min<10)
-            deliveryTime = hour+":0"+mm;
-        else if(hour<10)
-            deliveryTime = "0"+hour+":"+mm;
-        else
-            deliveryTime = hour+":"+mm;
-
-        return deliveryTime;
+        return null;
     }
 
 }
