@@ -137,13 +137,20 @@ public class OrderRepository {
             return;
 
         partnerMap.remove(partnerId);
+
+        HashSet<String > hs = partnerToOrderMap.get(partnerId);
+        for (String order : hs){
+            orderToPartnerMap.remove(order);
+        }
         partnerToOrderMap.remove(partnerId);
 
-        for(String order : orderToPartnerMap.keySet()){
-            if(orderToPartnerMap.get(order).equals(partnerId)){
-                orderToPartnerMap.remove(order);
-            }
-        }
+//        for(String order : orderToPartnerMap.keySet()){
+//            System.out.println("OtPm  order= "+order+"  partner="+orderToPartnerMap.get(order));
+//        }
+//
+//        for(String partner : partnerToOrderMap.keySet()){
+//            System.out.println("PtOm  partner= "+partner);
+//        }
     }
 
     public void deleteOrder(String orderId){
