@@ -17,19 +17,43 @@ public class OrderRepository {
         this.partnerMap = new HashMap<String, DeliveryPartner>();
         this.partnerToOrderMap = new HashMap<String, HashSet<String>>();
         this.orderToPartnerMap = new HashMap<String, String>();
+
+//        orderMap.put("1", new Order("1", "02:59"));
+//        orderMap.put("2", new Order("2", "07:30"));
+//        orderMap.put("3", new Order("3", "10:56"));
+//        orderMap.put("4", new Order("4", "15:42"));
+//        orderMap.put("5", new Order("5", "23:59"));
+//
+//        partnerMap.put("1", new DeliveryPartner("1"));
+//        partnerMap.put("2", new DeliveryPartner("2"));
+//        partnerMap.put("3", new DeliveryPartner("3"));
+
     }
+
 
     public void saveOrder(Order order){
         // your code here
-        String id = order.getId();
-        orderMap.put(id, order);
+        if(order!=null && !orderMap.containsKey(order.getId())) {
+            String id = order.getId();
+            orderMap.put(id, order);
+        }
+
+//        for (String orders : orderMap.keySet()){
+//            System.out.println(orderMap.get(orders).toString());
+//        }
+//        System.out.println();
     }
 
     public void savePartner(String partnerId){
         // your code here
         // create a new partner with given partnerId and save it
-        DeliveryPartner deliveryPartner = new DeliveryPartner(partnerId);
-        partnerMap.put(partnerId, deliveryPartner);
+        if(partnerId!=null && !partnerMap.containsKey(partnerId)) {
+            partnerMap.put(partnerId, new DeliveryPartner(partnerId));
+        }
+//        for (String partner : partnerMap.keySet()){
+//            System.out.println(partnerMap.get(partner).toString());
+//        }
+//        System.out.println();
     }
 
     public void saveOrderPartnerMap(String orderId, String partnerId){
@@ -46,9 +70,19 @@ public class OrderRepository {
             orderToPartnerMap.put(orderId, partnerId);
 
             HashSet<String> hs = partnerToOrderMap.get(partnerId);
-            hs.add(orderId);
-            partnerToOrderMap.put(partnerId, hs);
+            HashSet<String> newHs = new HashSet<>(hs);
+            newHs.add(orderId);
+            partnerToOrderMap.put(partnerId, newHs);
+
+
+//            System.out.println("OPm Inside  order present="+orderMap.containsKey(orderId)+"  partner present="+partnerMap.containsKey(partnerId));
         }
+//
+//        for (String orders : orderToPartnerMap.keySet()){
+//            System.out.println("order No="+orders+"  partner no="+orderToPartnerMap.get(orders));
+//        }
+//        System.out.println("OPm   order present="+orderMap.containsKey(orderId)+"  partner present="+partnerMap.containsKey(partnerId));
+
     }
 
     public Order findOrderById(String orderId){
@@ -70,7 +104,9 @@ public class OrderRepository {
 
     public List<String> findOrdersByPartnerId(String partnerId){
         // your code here
-        return new ArrayList<>(partnerToOrderMap.get(partnerId));
+        if(partnerToOrderMap.containsKey(partnerId))
+            return new ArrayList<>(partnerToOrderMap.get(partnerId));
+        return null;
     }
 
     public List<String> findAllOrders(){
@@ -126,8 +162,8 @@ public class OrderRepository {
     public Integer findOrdersLeftAfterGivenTimeByPartnerId(String timeString, String partnerId){
         // your code here
         Integer count = 0;
-        String hh = timeString.charAt(0) + timeString.charAt(1) + "";
-        String mm = timeString.charAt(3) + timeString.charAt(4) + "";
+        String hh = timeString.charAt(0) +""+ timeString.charAt(1) ;
+        String mm = timeString.charAt(3) +""+ timeString.charAt(4);
         int hour = Integer.parseInt(hh);
         int min = Integer.parseInt(mm);
         int time = hour*60 + min;
@@ -178,4 +214,5 @@ public class OrderRepository {
 
         return deliveryTime;
     }
+
 }
