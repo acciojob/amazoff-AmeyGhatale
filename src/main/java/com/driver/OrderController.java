@@ -59,7 +59,7 @@ public class OrderController {
         return new ResponseEntity<>(deliveryPartner, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-order-count-by-partner-id/{partnerId}")   //NOT WORKING
+    @GetMapping("/get-order-count-by-partner-id/{partnerId}")   // WORKING
     public ResponseEntity<Integer> getOrderCountByPartnerId(@PathVariable String partnerId){
 
         Integer orderCount = orderService.getPartnerById(partnerId).getNumberOfOrders();
@@ -86,7 +86,7 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-count-of-unassigned-orders")  //NOT WORKING
+    @GetMapping("/get-count-of-unassigned-orders")  // WORKING
     public ResponseEntity<Integer> getCountOfUnassignedOrders(){
         Integer countOfOrders = orderService.getCountOfUnassignedOrders();
 
@@ -95,7 +95,7 @@ public class OrderController {
         return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
     }
 
-        @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}")   //NOT WORKING (PATH VARIABLE ERROR)
+    @GetMapping("/get-count-of-orders-left-after-given-time/{time}/{partnerId}")   //NOT WORKING (PATH VARIABLE ERROR)
     public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable String time, @PathVariable String partnerId){
 
         Integer countOfOrders = orderService.getOrdersLeftAfterGivenTimeByPartnerId(time, partnerId);
