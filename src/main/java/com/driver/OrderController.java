@@ -95,7 +95,7 @@ public class OrderController {
         return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-count-of-orders-left-after-given-time/{time}/{partnerId}")   //NOT WORKING (PATH VARIABLE ERROR)
+    @GetMapping("/get-count-of-orders-left-after-given-time/{partnerId}")   //NOT WORKING (PATH VARIABLE ERROR)
     public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable String time, @PathVariable String partnerId){
 
         Integer countOfOrders = orderService.getOrdersLeftAfterGivenTimeByPartnerId(time, partnerId);
